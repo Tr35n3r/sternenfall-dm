@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "saved": 1784537807191,
+  "saved": 1784537808737,
   "tasks": [
     {
       "id": "mrswrdtlzqvp",
@@ -24,7 +24,7 @@
     },
     {
       "id": "mrswrdtljxf4",
-      "done": true,
+      "done": false,
       "created": 1784532811449,
       "title": "DM Command Center Split-Architektur fertigstellen",
       "notes": "split_dmcenter.py ausgeführt, alle 8 Rubrik-Dateien geprüft.",
