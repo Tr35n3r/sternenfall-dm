@@ -1,0 +1,56 @@
+{
+  "version": 1,
+  "saved": 1784532813267,
+  "tasks": [
+    {
+      "id": "mrswrdtlzqvp",
+      "done": false,
+      "created": 1784532811449,
+      "title": "Session 3 Intro-Szene schreiben",
+      "notes": "Anknüpfen an Waldrand-Cliffhanger. Finn-Auftritt vorbereiten.",
+      "cat": "session",
+      "prio": "hoch",
+      "due": "Vor Session 3"
+    },
+    {
+      "id": "mrswrdtlitia",
+      "done": false,
+      "created": 1784532811449,
+      "title": "Portrait-Prompt für Inquisitor Severin Aschenmal",
+      "notes": "SD-Prompt nach bestehendem Format. Ins atherion_portrait_prompts.html eintragen.",
+      "cat": "bild",
+      "prio": "mittel",
+      "due": ""
+    },
+    {
+      "id": "mrswrdtljxf4",
+      "done": true,
+      "created": 1784532811449,
+      "title": "DM Command Center Split-Architektur fertigstellen",
+      "notes": "split_dmcenter.py ausgeführt, alle 8 Rubrik-Dateien geprüft.",
+      "cat": "code",
+      "prio": "hoch",
+      "due": ""
+    },
+    {
+      "id": "mrswrdtl77in",
+      "done": false,
+      "created": 1784532811449,
+      "title": "Neue Karten-Marker ab #59 erfassen",
+      "notes": "atherion_karten_editor.html nutzen, JSON-Export anschliessend sichern.",
+      "cat": "karte",
+      "prio": "niedrig",
+      "due": ""
+    },
+    {
+      "id": "mrswrdtllt8g",
+      "done": false,
+      "created": 1784532811449,
+      "title": "Niamh Mondschatten in Wiki-Phase 2 integrieren",
+      "notes": "Gating-Passwort \"nachtluft\". NPC-Eintrag aus NPC_Arkanis_All.pdf ableiten.",
+      "cat": "npc",
+      "prio": "mittel",
+      "due": "Nach Session 3"
+    }
+  ]
+}
