@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "saved": 1784553717091,
+  "saved": 1784553729023,
   "tasks": [
     {
       "id": "mrt97fs2sb78",
@@ -19,7 +19,7 @@
       "title": "Session 3 Intro-Szene schreiben",
       "notes": "Anknüpfen an Waldrand-Cliffhanger. Finn-Auftritt vorbereiten.",
       "cat": "session",
-      "prio": "hoch",
+      "prio": "niedrig",
       "due": "Vor Session 3"
     },
     {
