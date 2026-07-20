@@ -1,7 +1,17 @@
 {
   "version": 1,
-  "saved": 1784554086534,
+  "saved": 1784554143508,
   "tasks": [
+    {
+      "id": "mrt9gktconrj",
+      "done": false,
+      "created": 1784554142304,
+      "title": "DM Command Center",
+      "notes": "Netzwerk auf neue entries.json updaten. Eine zentrale datei. Daten nicht in jeder section",
+      "cat": "code",
+      "prio": "hoch",
+      "due": "Session 2"
+    },
     {
       "id": "mrt9fcuiuym3",
       "done": false,
