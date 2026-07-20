@@ -459,19 +459,27 @@
     <h2>Sternenfall</h2>
     <p class="login-sub" id="login-sub-text">DM Aufgabenbuch · Zugang erforderlich</p>
 
+    <!-- Schritt 1: Passwort -->
     <div id="step-pw">
-      <input type="password" class="login-input" id="login-pw" placeholder="Passwort …" autocomplete="current-password">
+      <input type="password" class="login-input" id="login-pw"
+             placeholder="Passwort …" autocomplete="current-password">
       <button id="login-btn" onclick="doLoginStep1()">Eintreten</button>
       <div id="login-error"></div>
     </div>
 
+    <!-- Schritt 2: GitHub Token (nur beim ersten Mal) -->
     <div id="step-token" style="display:none;">
       <p class="login-hint">
         Einmaliger Schritt: GitHub Personal Access Token eingeben.<br>
-        Wird nur lokal gespeichert.<br><br>
-        <strong>Scope:</strong> nur <strong>repo</strong>
+        Der Token wird nur in diesem Browser gespeichert, nie ins Repo geschrieben.<br><br>
+        <strong style="color:var(--star)">Token erstellen:</strong><br>
+        github.com → Settings → Developer settings →<br>
+        Personal access tokens → Tokens (classic) → Generate new token<br><br>
+        Scope: <strong style="color:var(--gold)">repo</strong> (nur diesen ankreuzen)<br>
+        Ablauf: nach Wunsch (90 Tage empfohlen)
       </p>
-      <input type="password" class="login-input" id="login-token" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
+      <input type="password" class="login-input" id="login-token"
+             placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
       <button id="login-btn-token" onclick="doLoginStep2()">Token speichern & starten</button>
       <div id="login-error"></div>
     </div>
@@ -637,79 +645,129 @@
 //    ⚠️ OWNER und REPO hier eintragen — einmalig, dann nie mehr ändern.
 // ==============================================================
 
-<script>
-// ==================== KONFIGURATION ====================
-const GH_OWNER = 'Tr34n3r';
-const GH_REPO  = 'sternenfall-dm';
-const GH_FILE  = 'todos.json';
-const GH_BRANCH = 'main';
+const GH_OWNER    = 'Tr34n3r';            // GitHub-Username
+const GH_REPO     = 'sternenfall-dm';     // Repository-Name
+const GH_FILE     = 'todos.json';         // Dateiname im Repo (Root)
+const GH_BRANCH   = 'main';              // Branch (meist 'main')
+
+// SHA-256-Hash des App-Passworts.
+// Zum Ändern: echo -n 'NEUES_PW' | sha256sum → Hash hier ersetzen.
 const PW_HASH = '3f55f3ae6cde4c4f617896df369080a8cc58377bf12d5fbc32218cedac3e3fd2';
 
-// ==================== AUTH ====================
+// localStorage-Schlüssel
+const KEY_TASKS   = 'sternenfall_todos';  // Aufgaben-Cache
+const KEY_SESSION = 'sternenfall_auth';   // Login-Session (sessionStorage)
+const KEY_TOKEN   = 'sternenfall_ghtoken';// GitHub Token (localStorage, persistent)
+const KEY_SHA     = 'sternenfall_ghsha';  // Letzter bekannter Datei-SHA (für Updates)
+
+// Speicher-Debounce: nach einer Änderung X ms warten bevor zu GitHub gespeichert wird.
+// So werden schnelle Mehrfach-Klicks zu einem einzigen API-Aufruf zusammengefasst.
+const SAVE_DEBOUNCE_MS = 1200;
+
+// ==============================================================
+// 2. AUTH
+// ==============================================================
+
 async function sha256(str) {
   const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
   return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
 }
 
-function isLoggedIn() { return sessionStorage.getItem('sternenfall_auth') === 'ok'; }
-function getToken() { return localStorage.getItem('sternenfall_ghtoken') || ''; }
-function hasToken() { return !!getToken(); }
+function isLoggedIn()  { return sessionStorage.getItem(KEY_SESSION) === 'ok'; }
+function getToken()    { return localStorage.getItem(KEY_TOKEN) || ''; }
+function hasToken()    { return !!getToken(); }
 
+/**
+ * Schritt 1: App-Passwort prüfen.
+ * Bei Erfolg: weiter zu Schritt 2 (Token) oder direkt App laden.
+ */
 async function doLoginStep1() {
-  const pw = document.getElementById('login-pw').value;
-  const errorDiv = document.getElementById('login-error');
-  errorDiv.textContent = '';
+  const pw  = document.getElementById('login-pw').value;
+  const inp = document.getElementById('login-pw');
+  setLoginError('');
 
-  if (!pw) return;
+  if (!pw) { shakeInput(inp); return; }
 
-  if (await sha256(pw) !== PW_HASH) {
-    errorDiv.textContent = 'Falsches Passwort.';
+  const hash = await sha256(pw);
+  if (hash !== PW_HASH) {
+    setLoginError('Falsches Passwort.');
+    inp.value = ''; shakeInput(inp); inp.focus();
     return;
   }
 
+  // Passwort korrekt — Token vorhanden?
   if (hasToken()) {
+    // Token bereits gespeichert: direkt einloggen
     completeLogin();
   } else {
-    document.getElementById('step-pw').style.display = 'none';
+    // Token fehlt noch: Schritt 2 zeigen
+    document.getElementById('step-pw').style.display    = 'none';
     document.getElementById('step-token').style.display = 'block';
     document.getElementById('login-sub-text').textContent = 'GitHub Token einrichten';
+    document.getElementById('login-token').focus();
   }
 }
 
+/**
+ * Schritt 2: GitHub Token speichern und Verbindung testen.
+ * Der Token wird NUR im localStorage des Browsers gespeichert,
+ * nie ins Repo oder anderswo übertragen.
+ */
 async function doLoginStep2() {
   const token = document.getElementById('login-token').value.trim();
+  const inp   = document.getElementById('login-token');
+  setLoginError('');
+
+  if (!token) { shakeInput(inp); return; }
+
+  // Token testen: einfache Repo-Abfrage
+  setSyncStatus('saving', 'Verbindung testen…');
   const btn = document.getElementById('login-btn-token');
-  const errorDiv = document.getElementById('login-error');
-  
-  errorDiv.textContent = '';
   btn.disabled = true;
-  btn.textContent = 'Prüfe...';
+  btn.textContent = 'Verbinde…';
 
   try {
-    const res = await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}`, {
-      headers: { Authorization: `token ${token}` }
-    });
-
-    if (!res.ok) throw new Error(`Status ${res.status}`);
-
-    localStorage.setItem('sternenfall_ghtoken', token);
-    console.log("Token erfolgreich gespeichert");
+    const res = await fetch(
+      `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}`,
+      { headers: { Authorization: `token ${token}`, Accept: 'application/vnd.github.v3+json' } }
+    );
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    // Token gültig: speichern
+    localStorage.setItem(KEY_TOKEN, token);
     completeLogin();
-
   } catch(e) {
-    console.error(e);
-    errorDiv.textContent = "Token ungültig oder Repo nicht gefunden.";
+    setLoginError(`Token ungültig oder Repo nicht gefunden (${e.message}). Bitte prüfen.`);
+    setSyncStatus('error', 'Fehler');
     btn.disabled = false;
     btn.textContent = 'Token speichern & starten';
   }
 }
 
-function completeLogin() {
-  console.log("✅ completeLogin() aufgerufen");
-  sessionStorage.setItem('sternenfall_auth', 'ok');
+/** Abschluss Login: Session setzen, App initialisieren. */
+async function completeLogin() {
+  sessionStorage.setItem(KEY_SESSION, 'ok');
   document.getElementById('login-screen').style.display = 'none';
   document.getElementById('app').style.display = 'block';
-  initApp();
+  await initApp();
+}
+
+/** Abmelden: Session löschen. Token bleibt gespeichert (nur Passwort nötig beim nächsten Mal). */
+function doLogout() {
+  sessionStorage.removeItem(KEY_SESSION);
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'flex';
+  // Zurück zu Schritt 1
+  document.getElementById('step-pw').style.display    = 'block';
+  document.getElementById('step-token').style.display = 'none';
+  document.getElementById('login-sub-text').textContent = 'DM Aufgabenbuch · Zugang erforderlich';
+  document.getElementById('login-pw').value = '';
+  setLoginError('');
+}
+
+function setLoginError(msg) { document.getElementById('login-error').textContent = msg; }
+function shakeInput(inp) {
+  inp.classList.add('error');
+  setTimeout(() => inp.classList.remove('error'), 500);
 }
 
 // ==============================================================
