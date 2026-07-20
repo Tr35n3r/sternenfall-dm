@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "saved": 1784553824084,
+  "saved": 1784553931683,
   "tasks": [
     {
       "id": "mrt97fs2sb78",
@@ -31,16 +31,6 @@
       "cat": "karte",
       "prio": "niedrig",
       "due": ""
-    },
-    {
-      "id": "mrswrdtllt8g",
-      "done": false,
-      "created": 1784532811449,
-      "title": "Niamh Mondschatten in Wiki-Phase 2 integrieren",
-      "notes": "Gating-Passwort \"nachtluft\". NPC-Eintrag aus NPC_Arkanis_All.pdf ableiten.",
-      "cat": "npc",
-      "prio": "mittel",
-      "due": "Nach Session 3"
     }
   ]
 }
