@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "saved": 1784537808737,
+  "saved": 1784537829880,
   "tasks": [
     {
       "id": "mrswrdtlzqvp",
@@ -20,16 +20,6 @@
       "notes": "SD-Prompt nach bestehendem Format. Ins atherion_portrait_prompts.html eintragen.",
       "cat": "bild",
       "prio": "mittel",
-      "due": ""
-    },
-    {
-      "id": "mrswrdtljxf4",
-      "done": false,
-      "created": 1784532811449,
-      "title": "DM Command Center Split-Architektur fertigstellen",
-      "notes": "split_dmcenter.py ausgeführt, alle 8 Rubrik-Dateien geprüft.",
-      "cat": "code",
-      "prio": "hoch",
       "due": ""
     },
     {
