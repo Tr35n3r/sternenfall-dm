@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "saved": 1784553729023,
+  "saved": 1784553824084,
   "tasks": [
     {
       "id": "mrt97fs2sb78",
@@ -21,16 +21,6 @@
       "cat": "session",
       "prio": "niedrig",
       "due": "Vor Session 3"
-    },
-    {
-      "id": "mrswrdtlitia",
-      "done": false,
-      "created": 1784532811449,
-      "title": "Portrait-Prompt für Inquisitor Severin Aschenmal",
-      "notes": "SD-Prompt nach bestehendem Format. Ins atherion_portrait_prompts.html eintragen.",
-      "cat": "bild",
-      "prio": "mittel",
-      "due": ""
     },
     {
       "id": "mrswrdtl77in",
