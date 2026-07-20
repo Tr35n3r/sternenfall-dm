@@ -1,0 +1,1214 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sternenfall — DM Aufgabenbuch</title>
+<style>
+  :root {
+    --ink:       #0e0c0a;
+    --parch:     #1c1810;
+    --parch-2:   #251f14;
+    --border:    #3a3020;
+    --gold:      #c9a84c;
+    --gold-dim:  #7a6130;
+    --star:      #e8d5a0;
+    --muted:     #6b5d44;
+    --done-bg:   #111009;
+    --done-txt:  #4a4030;
+    --clr-code:   #5b8dd9;
+    --clr-bild:   #b07fd4;
+    --clr-quest:  #c9a84c;
+    --clr-story:  #e07b54;
+    --clr-item:   #6abf7b;
+    --clr-npc:    #e0b04a;
+    --clr-map:    #5bb8b0;
+    --clr-session:#d96b6b;
+    --clr-regel:  #9b9b9b;
+    --clr-sonstig:#a0a0a0;
+    --radius: 4px;
+    --font-display: 'Palatino Linotype', Palatino, 'Book Antiqua', Georgia, serif;
+    --font-body: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--ink);
+    color: var(--star);
+    font-family: var(--font-body);
+    font-size: 14px;
+    line-height: 1.55;
+    min-height: 100vh;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      radial-gradient(1px 1px at 12% 18%, rgba(201,168,76,.25) 0%, transparent 100%),
+      radial-gradient(1px 1px at 37% 72%, rgba(201,168,76,.18) 0%, transparent 100%),
+      radial-gradient(1px 1px at 63% 31%, rgba(201,168,76,.2)  0%, transparent 100%),
+      radial-gradient(1px 1px at 84% 54%, rgba(201,168,76,.15) 0%, transparent 100%),
+      radial-gradient(1px 1px at 51% 88%, rgba(201,168,76,.12) 0%, transparent 100%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ============================================================
+     LOGIN-SCREEN
+     Zweistufig: erst Passwort, dann (einmalig) GitHub Token.
+     Token wird nur im localStorage des Browsers gespeichert,
+     nie ins Repo geschrieben.
+  ============================================================ */
+  #login-screen {
+    position: fixed; inset: 0; z-index: 999;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--ink); padding: 24px;
+  }
+
+  #login-box {
+    background: var(--parch);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 36px 32px 28px;
+    max-width: 400px; width: 100%;
+    text-align: center;
+    box-shadow: 0 32px 80px rgba(0,0,0,.8);
+  }
+
+  #login-box .login-rune { font-size: 2.2rem; display: block; margin-bottom: 10px; color: var(--gold-dim); }
+  #login-box h2 {
+    font-family: var(--font-display); color: var(--gold);
+    font-size: 1.3rem; font-weight: normal; letter-spacing: .1em; margin-bottom: 6px;
+  }
+  #login-box p.login-sub {
+    font-size: .72rem; color: var(--muted); letter-spacing: .06em;
+    text-transform: uppercase; margin-bottom: 22px;
+  }
+
+  .login-input {
+    width: 100%; background: var(--ink); border: 1px solid var(--border);
+    border-radius: var(--radius); color: var(--star); font-size: .9rem;
+    padding: 10px 14px; outline: none; text-align: center;
+    letter-spacing: .04em; margin-bottom: 10px; transition: border-color .2s;
+  }
+  .login-input:focus { border-color: var(--gold-dim); }
+  .login-input.error { border-color: #e05555; animation: shake .3s; }
+
+  /* Hilfstext unter Token-Feld */
+  .login-hint {
+    font-size: .7rem; color: var(--muted); margin-bottom: 12px;
+    line-height: 1.5; text-align: left;
+  }
+  .login-hint a { color: var(--gold-dim); }
+
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    25%      { transform: translateX(-6px); }
+    75%      { transform: translateX(6px); }
+  }
+
+  #login-btn {
+    width: 100%; background: var(--gold-dim); border: none;
+    border-radius: var(--radius); color: var(--ink);
+    font-size: .88rem; font-weight: 600; padding: 10px;
+    cursor: pointer; letter-spacing: .06em; transition: background .15s;
+  }
+  #login-btn:hover { background: var(--gold); }
+  #login-btn:disabled { opacity: .5; cursor: not-allowed; }
+
+  #login-error { margin-top: 10px; font-size: .75rem; color: #e05555; min-height: 18px; }
+
+  /* Sync-Status-Indikator (kleines Icon neben dem Titel) */
+  #sync-status {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: .7rem; color: var(--muted);
+    margin-top: 8px;
+  }
+  #sync-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--muted); flex-shrink: 0;
+    transition: background .3s;
+  }
+  #sync-dot.ok      { background: #4caf6a; }
+  #sync-dot.saving  { background: var(--gold); animation: pulse 1s infinite; }
+  #sync-dot.error   { background: #e05555; }
+
+  @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:.3; } }
+
+  /* ============================================================
+     HAUPT-APP
+  ============================================================ */
+  #app {
+    position: relative; z-index: 1;
+    max-width: 900px; margin: 0 auto;
+    padding: 24px 16px 80px;
+    display: none;
+  }
+
+  header {
+    text-align: center; padding: 28px 0 20px;
+    border-bottom: 1px solid var(--border); margin-bottom: 24px;
+  }
+  header h1 {
+    font-family: var(--font-display); font-size: 1.9rem;
+    font-weight: normal; letter-spacing: .12em; color: var(--gold);
+    text-shadow: 0 0 24px rgba(201,168,76,.35);
+  }
+  header h1 span { color: var(--gold-dim); }
+  header p.subtitle {
+    margin-top: 6px; color: var(--muted); font-size: .8rem;
+    letter-spacing: .08em; text-transform: uppercase;
+  }
+
+  #header-meta {
+    display: flex; align-items: center; justify-content: center;
+    gap: 16px; margin-top: 12px; flex-wrap: wrap;
+  }
+
+  #progress-bar-wrap { max-width: 300px; flex: 1 1 200px; }
+  #progress-label {
+    display: flex; justify-content: space-between;
+    font-size: .75rem; color: var(--muted); margin-bottom: 4px;
+  }
+  #progress-track { background: var(--border); border-radius: 999px; height: 6px; overflow: hidden; }
+  #progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold-dim), var(--gold));
+    border-radius: 999px; transition: width .4s ease; width: 0%;
+  }
+
+  /* ============================================================
+     TOOLBAR (Sync-Status + Export + Logout)
+  ============================================================ */
+  #toolbar {
+    display: flex; gap: 8px; align-items: center;
+    margin-bottom: 14px; flex-wrap: wrap;
+  }
+
+  #sync-info {
+    display: flex; align-items: center; gap: 6px;
+    font-size: .72rem; color: var(--muted);
+    flex: 1 1 auto;
+  }
+
+  .io-btn {
+    background: none; border: 1px solid var(--border);
+    border-radius: var(--radius); color: var(--muted);
+    font-size: .72rem; letter-spacing: .05em;
+    padding: 5px 12px; cursor: pointer;
+    transition: border-color .15s, color .15s;
+  }
+  .io-btn:hover { border-color: var(--gold-dim); color: var(--gold); }
+
+  /* Notfall-Export bleibt immer als Backup-Option */
+  #import-file-input { display: none; }
+
+  #logout-btn {
+    background: none; border: 1px solid var(--border);
+    border-radius: var(--radius); color: var(--muted);
+    font-size: .68rem; padding: 4px 10px; cursor: pointer;
+    transition: color .15s, border-color .15s;
+  }
+  #logout-btn:hover { color: #e05555; border-color: #5a1a1a; }
+
+  /* ============================================================
+     STEUERLEISTE
+  ============================================================ */
+  #controls {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    align-items: center; margin-bottom: 18px;
+  }
+
+  #search {
+    flex: 1 1 160px; background: var(--parch);
+    border: 1px solid var(--border); border-radius: var(--radius);
+    color: var(--star); font-family: var(--font-body);
+    font-size: .85rem; padding: 7px 11px; outline: none;
+    transition: border-color .2s;
+  }
+  #search::placeholder { color: var(--muted); }
+  #search:focus { border-color: var(--gold-dim); }
+
+  #filter-btns { display: flex; flex-wrap: wrap; gap: 5px; flex: 1 1 auto; }
+
+  .filter-btn {
+    background: var(--parch); border: 1px solid var(--border);
+    border-radius: var(--radius); color: var(--muted);
+    font-size: .72rem; letter-spacing: .05em;
+    padding: 4px 10px; cursor: pointer;
+    transition: background .15s, color .15s, border-color .15s;
+  }
+  .filter-btn:hover { background: var(--parch-2); color: var(--star); }
+  .filter-btn.active { color: var(--ink); font-weight: 600; }
+  .filter-btn[data-cat="alle"].active        { background:#3a3020; color:var(--gold); border-color:var(--gold-dim); }
+  .filter-btn[data-cat="code"].active        { background:var(--clr-code);    border-color:var(--clr-code); }
+  .filter-btn[data-cat="bild"].active        { background:var(--clr-bild);    border-color:var(--clr-bild); }
+  .filter-btn[data-cat="quest"].active       { background:var(--clr-quest);   border-color:var(--clr-quest); }
+  .filter-btn[data-cat="story"].active       { background:var(--clr-story);   border-color:var(--clr-story); }
+  .filter-btn[data-cat="item"].active        { background:var(--clr-item);    border-color:var(--clr-item); }
+  .filter-btn[data-cat="npc"].active         { background:var(--clr-npc);     border-color:var(--clr-npc);   color:var(--ink); }
+  .filter-btn[data-cat="karte"].active       { background:var(--clr-map);     border-color:var(--clr-map); }
+  .filter-btn[data-cat="session"].active     { background:var(--clr-session); border-color:var(--clr-session); }
+  .filter-btn[data-cat="regel"].active       { background:var(--clr-regel);   border-color:var(--clr-regel);  color:var(--ink); }
+  .filter-btn[data-cat="sonstiges"].active   { background:var(--clr-sonstig); border-color:var(--clr-sonstig);color:var(--ink); }
+
+  #prio-btns { display: flex; gap: 5px; }
+
+  .prio-btn {
+    background: var(--parch); border: 1px solid var(--border);
+    border-radius: var(--radius); color: var(--muted);
+    font-size: .72rem; padding: 4px 10px; cursor: pointer;
+    transition: background .15s, color .15s;
+  }
+  .prio-btn:hover { background: var(--parch-2); color: var(--star); }
+  .prio-btn[data-prio="hoch"].active    { background:#8b1a1a; color:#ffc2c2; border-color:#8b1a1a; }
+  .prio-btn[data-prio="mittel"].active  { background:#5a4a10; color:#ffd97a; border-color:#5a4a10; }
+  .prio-btn[data-prio="niedrig"].active { background:#1a3a20; color:#9de0a0; border-color:#1a3a20; }
+
+  #toggle-done-wrap {
+    display: flex; align-items: center; gap: 7px;
+    font-size: .75rem; color: var(--muted);
+    cursor: pointer; user-select: none;
+  }
+  .toggle-switch {
+    width: 32px; height: 17px; background: var(--border);
+    border-radius: 999px; position: relative; transition: background .2s; flex-shrink: 0;
+  }
+  .toggle-switch::after {
+    content:''; position: absolute; top: 2px; left: 2px;
+    width: 13px; height: 13px; background: var(--muted);
+    border-radius: 50%; transition: left .2s, background .2s;
+  }
+  .toggle-switch.on { background: var(--gold-dim); }
+  .toggle-switch.on::after { left: 17px; background: var(--gold); }
+
+  #btn-new {
+    background: none; border: 1px solid var(--gold-dim);
+    border-radius: var(--radius); color: var(--gold);
+    font-family: var(--font-display); font-size: .85rem;
+    letter-spacing: .06em; padding: 7px 16px; cursor: pointer;
+    transition: background .15s, color .15s; white-space: nowrap;
+  }
+  #btn-new:hover { background: var(--gold-dim); color: var(--ink); }
+
+  /* ============================================================
+     AUFGABEN-KARTEN
+  ============================================================ */
+  #task-list { display: flex; flex-direction: column; gap: 6px; }
+
+  .task-card {
+    background: var(--parch); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 10px 12px 10px 14px;
+    display: flex; align-items: flex-start; gap: 10px;
+    transition: background .15s; position: relative;
+  }
+  .task-card:hover { background: var(--parch-2); }
+  .task-card::before {
+    content: ''; position: absolute;
+    left: 0; top: 4px; bottom: 4px; width: 3px;
+    border-radius: 999px; background: var(--cat-color, var(--gold-dim));
+  }
+  .task-card.done { background: var(--done-bg); opacity: .65; }
+  .task-card.done .task-title { text-decoration: line-through; color: var(--done-txt); }
+  .task-card.done .task-notes { color: var(--done-txt); }
+
+  .task-check { width: 17px; height: 17px; flex-shrink: 0; margin-top: 2px; accent-color: var(--gold); cursor: pointer; }
+  .task-body { flex: 1; min-width: 0; }
+  .task-meta { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 3px; }
+
+  .cat-badge {
+    font-size: .66rem; font-weight: 600; letter-spacing: .07em;
+    text-transform: uppercase; padding: 1px 7px;
+    border-radius: 999px; color: var(--ink);
+  }
+  .prio-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .prio-dot.hoch    { background: #e05555; box-shadow: 0 0 5px #e05555; }
+  .prio-dot.mittel  { background: #d4a017; }
+  .prio-dot.niedrig { background: #4caf6a; }
+
+  .task-date { font-size: .68rem; color: var(--muted); margin-left: auto; white-space: nowrap; }
+  .task-title { font-size: .9rem; color: var(--star); word-break: break-word; }
+  .task-notes { font-size: .78rem; color: var(--muted); margin-top: 3px; white-space: pre-wrap; word-break: break-word; }
+  .task-actions { display: flex; gap: 4px; flex-shrink: 0; margin-top: 1px; }
+  .act-btn {
+    background: none; border: none; color: var(--muted);
+    cursor: pointer; font-size: .8rem; padding: 3px 5px;
+    border-radius: var(--radius); transition: color .15s, background .15s; line-height: 1;
+  }
+  .act-btn:hover     { color: var(--gold); background: rgba(201,168,76,.08); }
+  .act-btn.del:hover { color: #e05555;     background: rgba(224,85,85,.08); }
+
+  #empty-state {
+    text-align: center; padding: 48px 0; color: var(--muted);
+    font-family: var(--font-display); font-size: 1rem; display: none;
+  }
+  #empty-state .rune { font-size: 2.5rem; display: block; margin-bottom: 12px; opacity:.4; }
+
+  /* ============================================================
+     MODAL
+  ============================================================ */
+  #modal-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,.72);
+    z-index: 100; display: none; align-items: center;
+    justify-content: center; padding: 16px;
+  }
+  #modal-overlay.open { display: flex; }
+  #modal {
+    background: var(--parch); border: 1px solid var(--border);
+    border-radius: 6px; width: 100%; max-width: 500px;
+    padding: 24px; box-shadow: 0 24px 64px rgba(0,0,0,.7);
+  }
+  #modal h2 {
+    font-family: var(--font-display); color: var(--gold);
+    font-size: 1.15rem; font-weight: normal;
+    letter-spacing: .08em; margin-bottom: 18px;
+  }
+  .form-row { margin-bottom: 13px; }
+  .form-row label {
+    display: block; font-size: .72rem; color: var(--muted);
+    letter-spacing: .06em; text-transform: uppercase; margin-bottom: 4px;
+  }
+  .form-row input[type="text"], .form-row textarea, .form-row select {
+    width: 100%; background: var(--ink); border: 1px solid var(--border);
+    border-radius: var(--radius); color: var(--star);
+    font-family: var(--font-body); font-size: .85rem;
+    padding: 7px 10px; outline: none; transition: border-color .2s;
+  }
+  .form-row input[type="text"]:focus,
+  .form-row textarea:focus,
+  .form-row select:focus { border-color: var(--gold-dim); }
+  .form-row textarea { resize: vertical; min-height: 72px; }
+  .form-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .modal-btns { display: flex; justify-content: flex-end; gap: 8px; margin-top: 20px; }
+  .btn-cancel {
+    background: none; border: 1px solid var(--border);
+    border-radius: var(--radius); color: var(--muted);
+    font-size: .82rem; padding: 7px 16px; cursor: pointer;
+  }
+  .btn-cancel:hover { border-color: var(--muted); color: var(--star); }
+  .btn-save {
+    background: var(--gold-dim); border: 1px solid var(--gold-dim);
+    border-radius: var(--radius); color: var(--ink);
+    font-size: .82rem; font-weight: 600; padding: 7px 20px; cursor: pointer;
+  }
+  .btn-save:hover { background: var(--gold); border-color: var(--gold); }
+
+  /* ============================================================
+     BESTÄTIGUNGS-DIALOG
+  ============================================================ */
+  #confirm-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,.8);
+    z-index: 200; display: none; align-items: center;
+    justify-content: center; padding: 16px;
+  }
+  #confirm-overlay.open { display: flex; }
+  #confirm-box {
+    background: var(--parch); border: 1px solid #5a1a1a;
+    border-radius: 6px; max-width: 340px; width: 100%;
+    padding: 22px; text-align: center;
+  }
+  #confirm-box p { font-size: .88rem; color: var(--star); margin-bottom: 16px; }
+  #confirm-box .btn-del-confirm {
+    background: #8b1a1a; border: none; border-radius: var(--radius);
+    color: #ffc2c2; font-weight: 600; padding: 7px 20px;
+    cursor: pointer; margin-right: 8px;
+  }
+  #confirm-box .btn-del-cancel {
+    background: none; border: 1px solid var(--border);
+    border-radius: var(--radius); color: var(--muted); padding: 7px 16px; cursor: pointer;
+  }
+
+  /* ============================================================
+     TOAST
+  ============================================================ */
+  #toast {
+    position: fixed; bottom: 24px; right: 24px;
+    background: var(--parch); border: 1px solid var(--border);
+    border-radius: var(--radius); color: var(--star);
+    font-size: .8rem; padding: 10px 16px; z-index: 500;
+    opacity: 0; transform: translateY(8px);
+    transition: opacity .25s, transform .25s; pointer-events: none;
+  }
+  #toast.show { opacity: 1; transform: translateY(0); }
+
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--ink); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 999px; }
+
+  @media (max-width: 520px) {
+    header h1 { font-size: 1.4rem; }
+    .form-2col { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     LOGIN-SCREEN
+     Schritt 1: App-Passwort (SHA-256 verglichen, kein Klartext)
+     Schritt 2: GitHub Token (einmalig, wird in localStorage gespeichert)
+     Der Token-Schritt erscheint nur wenn noch kein Token gespeichert ist.
+============================================================ -->
+<div id="login-screen">
+  <div id="login-box">
+    <span class="login-rune">✦</span>
+    <h2>Sternenfall</h2>
+    <p class="login-sub" id="login-sub-text">DM Aufgabenbuch · Zugang erforderlich</p>
+
+    <!-- Schritt 1: Passwort -->
+    <div id="step-pw">
+      <input type="password" class="login-input" id="login-pw"
+             placeholder="Passwort …" autocomplete="current-password">
+      <button id="login-btn" onclick="doLoginStep1()">Eintreten</button>
+      <div id="login-error"></div>
+    </div>
+
+    <!-- Schritt 2: GitHub Token (nur beim ersten Mal) -->
+    <div id="step-token" style="display:none;">
+      <p class="login-hint">
+        Einmaliger Schritt: GitHub Personal Access Token eingeben.<br>
+        Der Token wird nur in diesem Browser gespeichert, nie ins Repo geschrieben.<br><br>
+        <strong style="color:var(--star)">Token erstellen:</strong><br>
+        github.com → Settings → Developer settings →<br>
+        Personal access tokens → Tokens (classic) → Generate new token<br><br>
+        Scope: <strong style="color:var(--gold)">repo</strong> (nur diesen ankreuzen)<br>
+        Ablauf: nach Wunsch (90 Tage empfohlen)
+      </p>
+      <input type="password" class="login-input" id="login-token"
+             placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
+      <button id="login-btn-token" onclick="doLoginStep2()">Token speichern & starten</button>
+      <div id="login-error"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     HAUPT-APP
+============================================================ -->
+<div id="app">
+
+  <header>
+    <h1>✦ Sternenfall <span>◈</span> DM Aufgabenbuch ✦</h1>
+    <p class="subtitle">Kampagnen-Notizen · Atherion · Arkanis · Salzklinge · Auregant</p>
+    <div id="header-meta">
+      <div id="progress-bar-wrap">
+        <div id="progress-label">
+          <span id="progress-text">0 von 0 erledigt</span>
+          <span id="progress-pct">0 %</span>
+        </div>
+        <div id="progress-track"><div id="progress-fill"></div></div>
+      </div>
+      <div id="sync-status">
+        <div id="sync-dot"></div>
+        <span id="sync-label">—</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- TOOLBAR -->
+  <div id="toolbar">
+    <div id="sync-info">
+      <!-- Letzte Sync-Zeit wird hier per JS eingetragen -->
+    </div>
+    <!--
+      Notfall-Export: Falls GitHub mal nicht erreichbar ist,
+      kann man immer noch eine lokale JSON-Sicherung machen.
+    -->
+    <button class="io-btn" onclick="exportTasks()" title="Lokales JSON-Backup herunterladen">⬇ Backup</button>
+    <button class="io-btn" onclick="document.getElementById('import-file-input').click()" title="JSON einlesen">⬆ Import</button>
+    <input type="file" id="import-file-input" accept=".json" onchange="importTasks(event)">
+    <button id="logout-btn" onclick="doLogout()">Abmelden</button>
+  </div>
+
+  <!-- STEUERLEISTE -->
+  <div id="controls">
+    <input type="text" id="search" placeholder="Aufgaben durchsuchen…" oninput="render()">
+    <button id="btn-new" onclick="openModal()">+ Neue Aufgabe</button>
+  </div>
+
+  <!-- RUBRIK-FILTER -->
+  <div id="filter-btns" style="margin-bottom:10px;">
+    <button class="filter-btn active" data-cat="alle"     onclick="setFilter('alle',this)">Alle</button>
+    <button class="filter-btn"       data-cat="code"      onclick="setFilter('code',this)">💻 Code</button>
+    <button class="filter-btn"       data-cat="bild"      onclick="setFilter('bild',this)">🎨 Bild</button>
+    <button class="filter-btn"       data-cat="quest"     onclick="setFilter('quest',this)">⚔️ Quest</button>
+    <button class="filter-btn"       data-cat="story"     onclick="setFilter('story',this)">📖 Story</button>
+    <button class="filter-btn"       data-cat="item"      onclick="setFilter('item',this)">🗡️ Items</button>
+    <button class="filter-btn"       data-cat="npc"       onclick="setFilter('npc',this)">🧙 NPC</button>
+    <button class="filter-btn"       data-cat="karte"     onclick="setFilter('karte',this)">🗺️ Karte</button>
+    <button class="filter-btn"       data-cat="session"   onclick="setFilter('session',this)">🎲 Session</button>
+    <button class="filter-btn"       data-cat="regel"     onclick="setFilter('regel',this)">📜 Regeln</button>
+    <button class="filter-btn"       data-cat="sonstiges" onclick="setFilter('sonstiges',this)">📌 Sonstiges</button>
+  </div>
+
+  <!-- PRIORITÄT + TOGGLE -->
+  <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:18px;">
+    <div id="prio-btns">
+      <button class="prio-btn" data-prio="hoch"    onclick="setPrio('hoch',this)">🔴 Hoch</button>
+      <button class="prio-btn" data-prio="mittel"  onclick="setPrio('mittel',this)">🟡 Mittel</button>
+      <button class="prio-btn" data-prio="niedrig" onclick="setPrio('niedrig',this)">🟢 Niedrig</button>
+    </div>
+    <div id="toggle-done-wrap" onclick="toggleDone()">
+      <div class="toggle-switch" id="toggle-done-sw"></div>
+      <span>Erledigte anzeigen</span>
+    </div>
+  </div>
+
+  <div id="task-list"></div>
+  <div id="empty-state">
+    <span class="rune">✦</span>Keine Aufgaben gefunden.
+  </div>
+
+</div><!-- /#app -->
+
+<!-- MODAL -->
+<div id="modal-overlay" onclick="closeModalOnOverlay(event)">
+  <div id="modal">
+    <h2 id="modal-title">Neue Aufgabe</h2>
+    <div class="form-row">
+      <label>Titel *</label>
+      <input type="text" id="f-title" placeholder="Kurz und präzise…">
+    </div>
+    <div class="form-row">
+      <label>Notizen / Details</label>
+      <textarea id="f-notes" placeholder="Kontext, Verweise, Links…"></textarea>
+    </div>
+    <div class="form-2col">
+      <div class="form-row">
+        <label>Rubrik</label>
+        <select id="f-cat">
+          <option value="code">💻 Code</option>
+          <option value="bild">🎨 Bild generieren</option>
+          <option value="quest">⚔️ Quest</option>
+          <option value="story">📖 Story</option>
+          <option value="item">🗡️ Items</option>
+          <option value="npc">🧙 NPC</option>
+          <option value="karte">🗺️ Karte</option>
+          <option value="session">🎲 Session</option>
+          <option value="regel">📜 Regeln</option>
+          <option value="sonstiges">📌 Sonstiges</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label>Priorität</label>
+        <select id="f-prio">
+          <option value="hoch">🔴 Hoch</option>
+          <option value="mittel" selected>🟡 Mittel</option>
+          <option value="niedrig">🟢 Niedrig</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <label>Fällig bis (optional)</label>
+      <input type="text" id="f-due" placeholder="z.B. Session 3 / 15.08.2025">
+    </div>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeModal()">Abbrechen</button>
+      <button class="btn-save"   onclick="saveTask()">Speichern</button>
+    </div>
+  </div>
+</div>
+
+<!-- BESTÄTIGUNG -->
+<div id="confirm-overlay">
+  <div id="confirm-box">
+    <p>Aufgabe unwiderruflich löschen?</p>
+    <button class="btn-del-confirm" onclick="confirmDelete()">Löschen</button>
+    <button class="btn-del-cancel"  onclick="closeConfirm()">Abbrechen</button>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<!-- ============================================================
+     JAVASCRIPT
+     Struktur:
+       1.  Konfiguration (Repo, Datei, Schlüssel)
+       2.  Auth (Passwort + Token)
+       3.  GitHub API (laden / speichern)
+       4.  Persistenz (localStorage als Cache)
+       5.  Render
+       6.  Filter
+       7.  CRUD
+       8.  Import / Export (Notfall-Backup)
+       9.  UI-Hilfsfunktionen
+       10. Init
+============================================================ -->
+<script>
+
+// ==============================================================
+// 1. KONFIGURATION
+//    ⚠️ OWNER und REPO hier eintragen — einmalig, dann nie mehr ändern.
+// ==============================================================
+
+const GH_OWNER    = 'Tr34n3r';            // GitHub-Username
+const GH_REPO     = 'sternenfall-dm';     // Repository-Name
+const GH_FILE     = 'todos.json';         // Dateiname im Repo (Root)
+const GH_BRANCH   = 'main';              // Branch (meist 'main')
+
+// SHA-256-Hash des App-Passworts.
+// Zum Ändern: echo -n 'NEUES_PW' | sha256sum → Hash hier ersetzen.
+const PW_HASH = '3f55f3ae6cde4c4f617896df369080a8cc58377bf12d5fbc32218cedac3e3fd2';
+
+// localStorage-Schlüssel
+const KEY_TASKS   = 'sternenfall_todos';  // Aufgaben-Cache
+const KEY_SESSION = 'sternenfall_auth';   // Login-Session (sessionStorage)
+const KEY_TOKEN   = 'sternenfall_ghtoken';// GitHub Token (localStorage, persistent)
+const KEY_SHA     = 'sternenfall_ghsha';  // Letzter bekannter Datei-SHA (für Updates)
+
+// Speicher-Debounce: nach einer Änderung X ms warten bevor zu GitHub gespeichert wird.
+// So werden schnelle Mehrfach-Klicks zu einem einzigen API-Aufruf zusammengefasst.
+const SAVE_DEBOUNCE_MS = 1200;
+
+// ==============================================================
+// 2. AUTH
+// ==============================================================
+
+async function sha256(str) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
+function isLoggedIn()  { return sessionStorage.getItem(KEY_SESSION) === 'ok'; }
+function getToken()    { return localStorage.getItem(KEY_TOKEN) || ''; }
+function hasToken()    { return !!getToken(); }
+
+/**
+ * Schritt 1: App-Passwort prüfen.
+ * Bei Erfolg: weiter zu Schritt 2 (Token) oder direkt App laden.
+ */
+async function doLoginStep1() {
+  const pw  = document.getElementById('login-pw').value;
+  const inp = document.getElementById('login-pw');
+  setLoginError('');
+
+  if (!pw) { shakeInput(inp); return; }
+
+  const hash = await sha256(pw);
+  if (hash !== PW_HASH) {
+    setLoginError('Falsches Passwort.');
+    inp.value = ''; shakeInput(inp); inp.focus();
+    return;
+  }
+
+  // Passwort korrekt — Token vorhanden?
+  if (hasToken()) {
+    // Token bereits gespeichert: direkt einloggen
+    completeLogin();
+  } else {
+    // Token fehlt noch: Schritt 2 zeigen
+    document.getElementById('step-pw').style.display    = 'none';
+    document.getElementById('step-token').style.display = 'block';
+    document.getElementById('login-sub-text').textContent = 'GitHub Token einrichten';
+    document.getElementById('login-token').focus();
+  }
+}
+
+/**
+ * Schritt 2: GitHub Token speichern und Verbindung testen.
+ * Der Token wird NUR im localStorage des Browsers gespeichert,
+ * nie ins Repo oder anderswo übertragen.
+ */
+async function doLoginStep2() {
+  const token = document.getElementById('login-token').value.trim();
+  const inp   = document.getElementById('login-token');
+  setLoginError('');
+
+  if (!token) { shakeInput(inp); return; }
+
+  // Token testen: einfache Repo-Abfrage
+  setSyncStatus('saving', 'Verbindung testen…');
+  const btn = document.getElementById('login-btn-token');
+  btn.disabled = true;
+  btn.textContent = 'Verbinde…';
+
+  try {
+    const res = await fetch(
+      `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}`,
+      { headers: { Authorization: `token ${token}`, Accept: 'application/vnd.github.v3+json' } }
+    );
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    // Token gültig: speichern
+    localStorage.setItem(KEY_TOKEN, token);
+    completeLogin();
+  } catch(e) {
+    setLoginError(`Token ungültig oder Repo nicht gefunden (${e.message}). Bitte prüfen.`);
+    setSyncStatus('error', 'Fehler');
+    btn.disabled = false;
+    btn.textContent = 'Token speichern & starten';
+  }
+}
+
+/** Abschluss Login: Session setzen, App initialisieren. */
+async function completeLogin() {
+  sessionStorage.setItem(KEY_SESSION, 'ok');
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  await initApp();
+}
+
+/** Abmelden: Session löschen. Token bleibt gespeichert (nur Passwort nötig beim nächsten Mal). */
+function doLogout() {
+  sessionStorage.removeItem(KEY_SESSION);
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'flex';
+  // Zurück zu Schritt 1
+  document.getElementById('step-pw').style.display    = 'block';
+  document.getElementById('step-token').style.display = 'none';
+  document.getElementById('login-sub-text').textContent = 'DM Aufgabenbuch · Zugang erforderlich';
+  document.getElementById('login-pw').value = '';
+  setLoginError('');
+}
+
+function setLoginError(msg) { document.getElementById('login-error').textContent = msg; }
+function shakeInput(inp) {
+  inp.classList.add('error');
+  setTimeout(() => inp.classList.remove('error'), 500);
+}
+
+// ==============================================================
+// 3. GITHUB API
+//    Alle Aufgaben werden in einer einzigen Datei (todos.json)
+//    im Repo gespeichert. Beim Lesen wird der SHA gemerkt,
+//    beim Schreiben als Optimistic-Lock mitgegeben.
+// ==============================================================
+
+/**
+ * Lädt todos.json vom GitHub-Repo.
+ * Gibt { tasks, sha } zurück oder null wenn Datei noch nicht existiert.
+ */
+async function ghLoad() {
+  setSyncStatus('saving', 'Laden…');
+  try {
+    const res = await fetch(
+      `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_FILE}?ref=${GH_BRANCH}`,
+      { headers: { Authorization: `token ${getToken()}`, Accept: 'application/vnd.github.v3+json' } }
+    );
+
+    if (res.status === 404) {
+      // Datei existiert noch nicht — erster Start
+      setSyncStatus('ok', 'Neu');
+      return null;
+    }
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+    const data    = await res.json();
+    const content = JSON.parse(atob(data.content.replace(/\n/g, '')));
+    const sha     = data.sha;
+
+    localStorage.setItem(KEY_SHA, sha);
+    setSyncStatus('ok', 'Geladen ' + timeStr());
+    return { tasks: content.tasks || [], sha };
+
+  } catch(e) {
+    setSyncStatus('error', 'Ladefehler');
+    showToast('⚠️ GitHub laden fehlgeschlagen — lokaler Cache wird verwendet');
+    return null;
+  }
+}
+
+/**
+ * Speichert tasks[] in todos.json auf GitHub.
+ * Verwendet den gespeicherten SHA als Optimistic-Lock um Konflikte zu erkennen.
+ * Debounced: wird nicht sofort aufgerufen sondern nach SAVE_DEBOUNCE_MS.
+ */
+let saveTimer = null;
+
+function scheduleSave() {
+  // Sofort als "ausstehend" markieren
+  setSyncStatus('saving', 'Speichern…');
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(ghSave, SAVE_DEBOUNCE_MS);
+}
+
+async function ghSave() {
+  const token   = getToken();
+  const sha     = localStorage.getItem(KEY_SHA) || undefined;
+  const payload = { version: 1, saved: Date.now(), tasks };
+  const content = btoa(unescape(encodeURIComponent(JSON.stringify(payload, null, 2))));
+
+  const body = {
+    message: `todo: update ${new Date().toISOString().slice(0,16)}`,
+    content,
+    branch: GH_BRANCH,
+  };
+  // SHA mitgeben wenn wir die Datei schon kennen (Update vs. Create)
+  if (sha) body.sha = sha;
+
+  try {
+    const res = await fetch(
+      `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_FILE}`,
+      {
+        method: 'PUT',
+        headers: {
+          Authorization: `token ${token}`,
+          Accept: 'application/vnd.github.v3+json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+      }
+    );
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      // 409 Conflict = SHA veraltet (anderes Gerät hat gespeichert)
+      if (res.status === 409) {
+        showToast('⚠️ Konflikt erkannt — lade aktuelle Version…');
+        await ghLoad().then(d => { if (d) { tasks = d.tasks; saveTasks(); render(); } });
+        return;
+      }
+      throw new Error(err.message || `HTTP ${res.status}`);
+    }
+
+    const data = await res.json();
+    // Neuen SHA merken für nächstes Update
+    localStorage.setItem(KEY_SHA, data.content.sha);
+    // Auch lokal cachen
+    saveTasks();
+    setSyncStatus('ok', 'Gespeichert ' + timeStr());
+
+  } catch(e) {
+    setSyncStatus('error', 'Speicherfehler');
+    showToast(`⚠️ GitHub-Speicherfehler: ${e.message}`);
+    // Lokal trotzdem cachen
+    saveTasks();
+  }
+}
+
+// ==============================================================
+// 4. PERSISTENZ — localStorage als schneller Cache
+//    (Fallback wenn GitHub nicht erreichbar)
+// ==============================================================
+
+let tasks = [];
+
+function loadTasks() {
+  try { tasks = JSON.parse(localStorage.getItem(KEY_TASKS) || '[]'); }
+  catch { tasks = []; }
+}
+
+function saveTasks() {
+  localStorage.setItem(KEY_TASKS, JSON.stringify(tasks));
+}
+
+// ==============================================================
+// 5. RENDER
+// ==============================================================
+
+let filterCat  = 'alle';
+let filterPrio = null;
+let showDone   = false;
+let editId     = null;
+let deleteId   = null;
+
+const CAT_COLORS = {
+  code:'#5b8dd9', bild:'#b07fd4', quest:'#c9a84c', story:'#e07b54',
+  item:'#6abf7b', npc:'#e0b04a',  karte:'#5bb8b0', session:'#d96b6b',
+  regel:'#9b9b9b', sonstiges:'#a0a0a0',
+};
+const CAT_LABELS = {
+  code:'💻 Code', bild:'🎨 Bild', quest:'⚔️ Quest', story:'📖 Story',
+  item:'🗡️ Items', npc:'🧙 NPC', karte:'🗺️ Karte', session:'🎲 Session',
+  regel:'📜 Regeln', sonstiges:'📌 Sonstiges',
+};
+
+function render() {
+  const list   = document.getElementById('task-list');
+  const empty  = document.getElementById('empty-state');
+  const search = document.getElementById('search').value.toLowerCase().trim();
+
+  let filtered = tasks.filter(t => {
+    if (!showDone && t.done)                           return false;
+    if (filterCat !== 'alle' && t.cat !== filterCat)  return false;
+    if (filterPrio && t.prio !== filterPrio)           return false;
+    if (search && !(t.title+' '+(t.notes||'')).toLowerCase().includes(search)) return false;
+    return true;
+  });
+
+  const prioOrder = { hoch:0, mittel:1, niedrig:2 };
+  filtered.sort((a,b) => {
+    if (a.done !== b.done) return a.done ? 1 : -1;
+    return (prioOrder[a.prio]??1) - (prioOrder[b.prio]??1);
+  });
+
+  const total = tasks.length, done = tasks.filter(t=>t.done).length;
+  const pct   = total ? Math.round(done/total*100) : 0;
+  document.getElementById('progress-fill').style.width   = pct+'%';
+  document.getElementById('progress-text').textContent   = `${done} von ${total} erledigt`;
+  document.getElementById('progress-pct').textContent    = pct+' %';
+
+  list.innerHTML = '';
+  if (filtered.length === 0) { empty.style.display='block'; return; }
+  empty.style.display = 'none';
+
+  filtered.forEach(t => {
+    const color = CAT_COLORS[t.cat] || '#c9a84c';
+    const card  = document.createElement('div');
+    card.className = 'task-card'+(t.done?' done':'');
+    card.style.setProperty('--cat-color', color);
+    card.innerHTML = `
+      <input type="checkbox" class="task-check" ${t.done?'checked':''}
+             onchange="toggleTask('${t.id}')">
+      <div class="task-body">
+        <div class="task-meta">
+          <span class="cat-badge" style="background:${color}">${CAT_LABELS[t.cat]||t.cat}</span>
+          <span class="prio-dot ${t.prio}" title="Priorität: ${t.prio}"></span>
+          ${t.due?`<span class="task-date">📅 ${escHtml(t.due)}</span>`:''}
+        </div>
+        <div class="task-title">${escHtml(t.title)}</div>
+        ${t.notes?`<div class="task-notes">${escHtml(t.notes)}</div>`:''}
+      </div>
+      <div class="task-actions">
+        <button class="act-btn"     onclick="openEdit('${t.id}')">✏️</button>
+        <button class="act-btn del" onclick="askDelete('${t.id}')">🗑️</button>
+      </div>`;
+    list.appendChild(card);
+  });
+}
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;')
+                  .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ==============================================================
+// 6. FILTER
+// ==============================================================
+
+function setFilter(cat,btn) {
+  filterCat = cat;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active'); render();
+}
+function setPrio(prio,btn) {
+  if (filterPrio===prio) {
+    filterPrio=null;
+    document.querySelectorAll('.prio-btn').forEach(b=>b.classList.remove('active'));
+  } else {
+    filterPrio=prio;
+    document.querySelectorAll('.prio-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+  render();
+}
+function toggleDone() {
+  showDone=!showDone;
+  document.getElementById('toggle-done-sw').classList.toggle('on',showDone);
+  render();
+}
+
+// ==============================================================
+// 7. CRUD — jede Mutation ruft scheduleSave() auf
+// ==============================================================
+
+function uid() { return Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
+
+function toggleTask(id) {
+  const t = tasks.find(t=>t.id===id);
+  if (t) { t.done=!t.done; render(); scheduleSave(); }
+}
+
+function saveTask() {
+  const title = document.getElementById('f-title').value.trim();
+  if (!title) {
+    const inp = document.getElementById('f-title');
+    inp.focus(); inp.style.borderColor='#e05555';
+    setTimeout(()=>inp.style.borderColor='',1200); return;
+  }
+  const data = {
+    title, notes: document.getElementById('f-notes').value.trim(),
+    cat:   document.getElementById('f-cat').value,
+    prio:  document.getElementById('f-prio').value,
+    due:   document.getElementById('f-due').value.trim(),
+  };
+  if (editId) {
+    const idx = tasks.findIndex(t=>t.id===editId);
+    if (idx!==-1) tasks[idx]={...tasks[idx],...data};
+  } else {
+    tasks.unshift({id:uid(), done:false, created:Date.now(), ...data});
+  }
+  closeModal(); render(); scheduleSave();
+}
+
+function askDelete(id)   { deleteId=id; document.getElementById('confirm-overlay').classList.add('open'); }
+function confirmDelete() {
+  tasks=tasks.filter(t=>t.id!==deleteId);
+  deleteId=null; closeConfirm(); render(); scheduleSave();
+}
+
+// ==============================================================
+// 8. IMPORT / EXPORT (Notfall-Backup, unabhängig von GitHub)
+// ==============================================================
+
+function exportTasks() {
+  const date = new Date().toISOString().slice(0,10);
+  const blob = new Blob([JSON.stringify({version:1,exported:Date.now(),tasks},null,2)],
+                        {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `sternenfall_todo_${date}.json`;
+  a.click(); URL.revokeObjectURL(a.href);
+  showToast('✓ Backup heruntergeladen');
+}
+
+function importTasks(event) {
+  const file = event.target.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data     = JSON.parse(e.target.result);
+      const imported = Array.isArray(data) ? data : (data.tasks||[]);
+      const map      = new Map(tasks.map(t=>[t.id,t]));
+      let added=0, updated=0;
+      imported.forEach(t=>{
+        if (!t.id||!t.title) return;
+        map.has(t.id) ? updated++ : added++;
+        map.set(t.id,t);
+      });
+      tasks = Array.from(map.values());
+      render(); scheduleSave();
+      showToast(`✓ Import: ${added} neu, ${updated} aktualisiert`);
+    } catch { showToast('✗ Import fehlgeschlagen — ungültige Datei'); }
+    event.target.value='';
+  };
+  reader.readAsText(file);
+}
+
+// ==============================================================
+// 9. UI-HILFSFUNKTIONEN
+// ==============================================================
+
+function openModal(prefillCat) {
+  editId=null;
+  document.getElementById('modal-title').textContent='Neue Aufgabe';
+  document.getElementById('f-title').value='';
+  document.getElementById('f-notes').value='';
+  document.getElementById('f-prio').value='mittel';
+  document.getElementById('f-due').value='';
+  document.getElementById('f-cat').value=(filterCat!=='alle')?filterCat:(prefillCat||'session');
+  document.getElementById('modal-overlay').classList.add('open');
+  document.getElementById('f-title').focus();
+}
+function openEdit(id) {
+  const t=tasks.find(t=>t.id===id); if(!t) return;
+  editId=id;
+  document.getElementById('modal-title').textContent='Aufgabe bearbeiten';
+  document.getElementById('f-title').value=t.title;
+  document.getElementById('f-notes').value=t.notes||'';
+  document.getElementById('f-cat').value=t.cat;
+  document.getElementById('f-prio').value=t.prio;
+  document.getElementById('f-due').value=t.due||'';
+  document.getElementById('modal-overlay').classList.add('open');
+  document.getElementById('f-title').focus();
+}
+function closeModal()         { document.getElementById('modal-overlay').classList.remove('open'); editId=null; }
+function closeModalOnOverlay(e){ if(e.target===document.getElementById('modal-overlay')) closeModal(); }
+function closeConfirm()       { document.getElementById('confirm-overlay').classList.remove('open'); deleteId=null; }
+
+let toastTimer=null;
+function showToast(msg) {
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.remove('show'),3500);
+}
+
+/**
+ * Sync-Status-Anzeige aktualisieren.
+ * state: 'ok' | 'saving' | 'error'
+ */
+function setSyncStatus(state, label) {
+  const dot = document.getElementById('sync-dot');
+  const lbl = document.getElementById('sync-label');
+  dot.className = ''; dot.classList.add(state);
+  lbl.textContent = label;
+}
+
+function timeStr() {
+  return new Date().toLocaleTimeString('de-CH',{hour:'2-digit',minute:'2-digit'});
+}
+
+document.addEventListener('keydown', e=>{
+  if (e.key==='Escape')    { closeModal(); closeConfirm(); }
+  if (e.key==='Enter' && document.getElementById('modal-overlay').classList.contains('open')) {
+    if (document.activeElement.tagName!=='TEXTAREA') { e.preventDefault(); saveTask(); }
+  }
+  if (e.key==='n' && !['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName)) {
+    if (!document.getElementById('modal-overlay').classList.contains('open')) openModal();
+  }
+});
+
+document.getElementById('login-pw').addEventListener('keydown', e=>{
+  if (e.key==='Enter') doLoginStep1();
+});
+document.getElementById('login-token').addEventListener('keydown', e=>{
+  if (e.key==='Enter') doLoginStep2();
+});
+
+// ==============================================================
+// 10. INIT
+// ==============================================================
+
+function seedDemoTasks() {
+  if (tasks.length>0) return;
+  tasks = [
+    { id:uid(), done:false, created:Date.now(),
+      title:'Session 3 Intro-Szene schreiben',
+      notes:'Anknüpfen an Waldrand-Cliffhanger. Finn-Auftritt vorbereiten.',
+      cat:'session', prio:'hoch', due:'Vor Session 3' },
+    { id:uid(), done:false, created:Date.now(),
+      title:'Portrait-Prompt für Inquisitor Severin Aschenmal',
+      notes:'SD-Prompt nach bestehendem Format. Ins atherion_portrait_prompts.html eintragen.',
+      cat:'bild', prio:'mittel', due:'' },
+    { id:uid(), done:true, created:Date.now(),
+      title:'DM Command Center Split-Architektur fertigstellen',
+      notes:'split_dmcenter.py ausgeführt, alle 8 Rubrik-Dateien geprüft.',
+      cat:'code', prio:'hoch', due:'' },
+    { id:uid(), done:false, created:Date.now(),
+      title:'Neue Karten-Marker ab #59 erfassen',
+      notes:'atherion_karten_editor.html nutzen, JSON-Export anschliessend sichern.',
+      cat:'karte', prio:'niedrig', due:'' },
+    { id:uid(), done:false, created:Date.now(),
+      title:'Niamh Mondschatten in Wiki-Phase 2 integrieren',
+      notes:'Gating-Passwort "nachtluft". NPC-Eintrag aus NPC_Arkanis_All.pdf ableiten.',
+      cat:'npc', prio:'mittel', due:'Nach Session 3' },
+  ];
+}
+
+/**
+ * App initialisieren nach erfolgreichem Login:
+ * 1. Lokalen Cache laden (sofortige Anzeige ohne Wartezeit)
+ * 2. GitHub-Version laden und anzeigen
+ */
+async function initApp() {
+  // Sofort lokalen Cache zeigen
+  loadTasks();
+  seedDemoTasks();
+  render();
+
+  // Dann GitHub-Version laden und überschreiben
+  const ghData = await ghLoad();
+  if (ghData && ghData.tasks) {
+    tasks = ghData.tasks;
+    saveTasks(); // Cache aktualisieren
+    render();
+  } else if (!ghData && tasks.length > 0) {
+    // Datei existiert noch nicht auf GitHub: lokale Daten hochladen
+    scheduleSave();
+  }
+}
+
+// Beim Seitenload: Session prüfen
+if (isLoggedIn()) {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  initApp();
+} else {
+  document.getElementById('login-pw').focus();
+}
+</script>
+</body>
+</html>
