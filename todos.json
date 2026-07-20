@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "saved": 1784553931683,
+  "saved": 1784553993069,
   "tasks": [
     {
       "id": "mrt97fs2sb78",
@@ -26,11 +26,11 @@
       "id": "mrswrdtl77in",
       "done": false,
       "created": 1784532811449,
-      "title": "Neue Karten-Marker ab #59 erfassen",
-      "notes": "atherion_karten_editor.html nutzen, JSON-Export anschliessend sichern.",
-      "cat": "karte",
-      "prio": "niedrig",
-      "due": ""
+      "title": "Sägemühlen und Heu Bild",
+      "notes": "Bild für Sägemühle und Heu generieren",
+      "cat": "bild",
+      "prio": "hoch",
+      "due": "Session 2"
     }
   ]
 }
