@@ -1,7 +1,17 @@
 {
   "version": 1,
-  "saved": 1784553993069,
+  "saved": 1784554033968,
   "tasks": [
+    {
+      "id": "mrt9e8am7m1v",
+      "done": false,
+      "created": 1784554032766,
+      "title": "Gated IF Variable abklären",
+      "notes": "Wenn ein neuer Gated eintrag zugänglich gemacht wird, ein anderer automatisch gaten (z.b. wenn aufbruch nach norden, dann ist Holzhein nicht mehr der richtige aktuelle Ort sondern die Strasse, Wald oä.)",
+      "cat": "session",
+      "prio": "hoch",
+      "due": "Session 2"
+    },
     {
       "id": "mrt97fs2sb78",
       "done": false,
