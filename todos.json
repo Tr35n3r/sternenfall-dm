@@ -1,7 +1,17 @@
 {
   "version": 1,
-  "saved": 1784554143508,
+  "saved": 1784659772367,
   "tasks": [
+    {
+      "id": "mrv0ckk9fe7m",
+      "done": false,
+      "created": 1784659771161,
+      "title": "Spieler Stats",
+      "notes": "Bei Klick auf die Chars in der Chronik werden die Stats,angezeigt",
+      "cat": "sonstiges",
+      "prio": "mittel",
+      "due": "Session 2"
+    },
     {
       "id": "mrt9gktconrj",
       "done": false,
@@ -17,7 +27,7 @@
       "done": false,
       "created": 1784554085322,
       "title": "Reisebild",
-      "notes": "Ein BIld generieren welches ich für Strassen, Wege Schiff (Reisen, brauchen kann)",
+      "notes": "Ein BIld generieren welches ich fÃ¼r Strassen, Wege Schiff (Reisen, brauchen kann)",
       "cat": "bild",
       "prio": "niedrig",
       "due": "Ende Jahr"
@@ -26,8 +36,8 @@
       "id": "mrt9e8am7m1v",
       "done": false,
       "created": 1784554032766,
-      "title": "Gated IF Variable abklären",
-      "notes": "Wenn ein neuer Gated eintrag zugänglich gemacht wird, ein anderer automatisch gaten (z.b. wenn aufbruch nach norden, dann ist Holzhein nicht mehr der richtige aktuelle Ort sondern die Strasse, Wald oä.)",
+      "title": "Gated IF Variable abklÃ¤ren",
+      "notes": "Wenn ein neuer Gated eintrag zugÃ¤nglich gemacht wird, ein anderer automatisch gaten (z.b. wenn aufbruch nach norden, dann ist Holzhein nicht mehr der richtige aktuelle Ort sondern die Strasse, Wald oÃ¤.)",
       "cat": "session",
       "prio": "hoch",
       "due": "Session 2"
@@ -37,7 +47,7 @@
       "done": false,
       "created": 1784553715874,
       "title": "Netzwerk Nebelkralle",
-      "notes": "Mit Questreihe Köhler ein Neues Netzwerk für die Nebelkrallen mit Senna als Einstieg darin definieren (wenn sie nicht getötet wurde)",
+      "notes": "Mit Questreihe KÃ¶hler ein Neues Netzwerk fÃ¼r die Nebelkrallen mit Senna als Einstieg darin definieren (wenn sie nicht getÃ¶tet wurde)",
       "cat": "story",
       "prio": "mittel",
       "due": "Session 2"
@@ -47,7 +57,7 @@
       "done": false,
       "created": 1784532811449,
       "title": "Session 3 Intro-Szene schreiben",
-      "notes": "Anknüpfen an Waldrand-Cliffhanger. Finn-Auftritt vorbereiten.",
+      "notes": "AnknÃ¼pfen an Waldrand-Cliffhanger. Finn-Auftritt vorbereiten.",
       "cat": "session",
       "prio": "niedrig",
       "due": "Vor Session 3"
@@ -56,8 +66,8 @@
       "id": "mrswrdtl77in",
       "done": false,
       "created": 1784532811449,
-      "title": "Sägemühlen und Heu Bild",
-      "notes": "Bild für Sägemühle und Heu generieren",
+      "title": "SÃ¤gemÃ¼hlen und Heu Bild",
+      "notes": "Bild fÃ¼r SÃ¤gemÃ¼hle und Heu generieren",
       "cat": "bild",
       "prio": "hoch",
       "due": "Session 2"
