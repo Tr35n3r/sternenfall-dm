@@ -1,10 +1,10 @@
 {
   "version": 1,
-  "saved": 1784712221100,
+  "saved": 1784712416933,
   "tasks": [
     {
       "id": "mrv0ckk9fe7m",
-      "done": false,
+      "done": true,
       "created": 1784659771161,
       "title": "Spieler Stats",
       "notes": "Bei Klick auf die Chars in der Chronik werden die Stats,angezeigt",
