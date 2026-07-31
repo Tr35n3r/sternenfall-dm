@@ -1,7 +1,17 @@
 {
   "version": 1,
-  "saved": 1785527351076,
+  "saved": 1785527379785,
   "tasks": [
+    {
+      "id": "ms9cweqcqfs2",
+      "done": false,
+      "created": 1785527378580,
+      "title": "Persönliche Quest Skall",
+      "notes": "Persönliche Quest Skall",
+      "cat": "quest",
+      "prio": "mittel",
+      "due": "Session 3"
+    },
     {
       "id": "ms9cvskugbbq",
       "done": false,
