@@ -1,7 +1,17 @@
 {
   "version": 1,
-  "saved": 1786535685685,
+  "saved": 1786535726789,
   "tasks": [
+    {
+      "id": "msq18s9gepmf",
+      "done": false,
+      "created": 1786535725588,
+      "title": "Termin-Finder Seite",
+      "notes": "Termin-Finder Seite bauen um besser einen Termin für die Sessions zu finden",
+      "cat": "session",
+      "prio": "hoch",
+      "due": "asap"
+    },
     {
       "id": "ms9cy3ss5va9",
       "done": true,
