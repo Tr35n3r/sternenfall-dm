@@ -1,10 +1,10 @@
 {
   "version": 1,
-  "saved": 1786535726789,
+  "saved": 1786535729813,
   "tasks": [
     {
       "id": "msq18s9gepmf",
-      "done": false,
+      "done": true,
       "created": 1786535725588,
       "title": "Termin-Finder Seite",
       "notes": "Termin-Finder Seite bauen um besser einen Termin für die Sessions zu finden",
