@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "saved": 1786535543688,
+  "saved": 1786535685685,
   "tasks": [
     {
       "id": "ms9cy3ss5va9",
@@ -64,7 +64,7 @@
     },
     {
       "id": "mrt9fcuiuym3",
-      "done": false,
+      "done": true,
       "created": 1784554085322,
       "title": "Reisebild",
       "notes": "Ein BIld generieren welches ich fÃÂÃÂÃÂÃÂ¼r Strassen, Wege Schiff (Reisen, brauchen kann)",
