@@ -1,13 +1,13 @@
 {
   "version": 1,
-  "saved": 1785527458930,
+  "saved": 1786535525038,
   "tasks": [
     {
       "id": "ms9cy3ss5va9",
       "done": false,
       "created": 1785527457724,
-      "title": "Persönliche Quest Drazhar",
-      "notes": "Persönliche Quest Drazhar",
+      "title": "PersÃ¶nliche Quest Drazhar",
+      "notes": "PersÃ¶nliche Quest Drazhar",
       "cat": "quest",
       "prio": "mittel",
       "due": "Session 3"
@@ -16,8 +16,8 @@
       "id": "ms9cwz2dvukz",
       "done": false,
       "created": 1785527404933,
-      "title": "Persönliche Quest Nyktarion",
-      "notes": "Persönliche Quest Nyktarion",
+      "title": "PersÃ¶nliche Quest Nyktarion",
+      "notes": "PersÃ¶nliche Quest Nyktarion",
       "cat": "quest",
       "prio": "mittel",
       "due": "Session 3"
@@ -26,8 +26,8 @@
       "id": "ms9cweqcqfs2",
       "done": false,
       "created": 1785527378580,
-      "title": "Persönliche Quest Skall",
-      "notes": "Persönliche Quest Skall",
+      "title": "PersÃ¶nliche Quest Skall",
+      "notes": "PersÃ¶nliche Quest Skall",
       "cat": "quest",
       "prio": "mittel",
       "due": "Session 3"
@@ -36,8 +36,8 @@
       "id": "ms9cvskugbbq",
       "done": false,
       "created": 1785527349870,
-      "title": "Persönliche Quest Davian",
-      "notes": "Persönliche Quest Davian",
+      "title": "PersÃ¶nliche Quest Davian",
+      "notes": "PersÃ¶nliche Quest Davian",
       "cat": "quest",
       "prio": "mittel",
       "due": "Bis Session 3"
@@ -67,17 +67,17 @@
       "done": false,
       "created": 1784554085322,
       "title": "Reisebild",
-      "notes": "Ein BIld generieren welches ich fÃÂÃÂ¼r Strassen, Wege Schiff (Reisen, brauchen kann)",
+      "notes": "Ein BIld generieren welches ich fÃÂÃÂÃÂÃÂ¼r Strassen, Wege Schiff (Reisen, brauchen kann)",
       "cat": "bild",
       "prio": "niedrig",
       "due": "Ende Jahr"
     },
     {
       "id": "mrt9e8am7m1v",
-      "done": false,
+      "done": true,
       "created": 1784554032766,
-      "title": "Gated IF Variable abklÃÂÃÂ¤ren",
-      "notes": "Wenn ein neuer Gated eintrag zugÃÂÃÂ¤nglich gemacht wird, ein anderer automatisch gaten (z.b. wenn aufbruch nach norden, dann ist Holzhein nicht mehr der richtige aktuelle Ort sondern die Strasse, Wald oÃÂÃÂ¤.)",
+      "title": "Gated IF Variable abklÃÂÃÂÃÂÃÂ¤ren",
+      "notes": "Wenn ein neuer Gated eintrag zugÃÂÃÂÃÂÃÂ¤nglich gemacht wird, ein anderer automatisch gaten (z.b. wenn aufbruch nach norden, dann ist Holzhein nicht mehr der richtige aktuelle Ort sondern die Strasse, Wald oÃÂÃÂÃÂÃÂ¤.)",
       "cat": "session",
       "prio": "hoch",
       "due": "Session 2"
@@ -87,7 +87,7 @@
       "done": false,
       "created": 1784553715874,
       "title": "Netzwerk Nebelkralle",
-      "notes": "Mit Questreihe KÃÂÃÂ¶hler ein Neues Netzwerk fÃÂÃÂ¼r die Nebelkrallen mit Senna als Einstieg darin definieren (wenn sie nicht getÃÂÃÂ¶tet wurde)",
+      "notes": "Mit Questreihe KÃÂÃÂÃÂÃÂ¶hler ein Neues Netzwerk fÃÂÃÂÃÂÃÂ¼r die Nebelkrallen mit Senna als Einstieg darin definieren (wenn sie nicht getÃÂÃÂÃÂÃÂ¶tet wurde)",
       "cat": "story",
       "prio": "mittel",
       "due": "Session 2"
@@ -97,7 +97,7 @@
       "done": false,
       "created": 1784532811449,
       "title": "Session 3 Intro-Szene schreiben",
-      "notes": "AnknÃÂÃÂ¼pfen an Waldrand-Cliffhanger. Finn-Auftritt vorbereiten.",
+      "notes": "AnknÃÂÃÂÃÂÃÂ¼pfen an Waldrand-Cliffhanger. Finn-Auftritt vorbereiten.",
       "cat": "session",
       "prio": "niedrig",
       "due": "Vor Session 3"
@@ -106,8 +106,8 @@
       "id": "mrswrdtl77in",
       "done": false,
       "created": 1784532811449,
-      "title": "SÃÂÃÂ¤gemÃÂÃÂ¼hlen und Heu Bild",
-      "notes": "Bild fÃÂÃÂ¼r SÃÂÃÂ¤gemÃÂÃÂ¼hle und Heu generieren",
+      "title": "SÃÂÃÂÃÂÃÂ¤gemÃÂÃÂÃÂÃÂ¼hlen und Heu Bild",
+      "notes": "Bild fÃÂÃÂÃÂÃÂ¼r SÃÂÃÂÃÂÃÂ¤gemÃÂÃÂÃÂÃÂ¼hle und Heu generieren",
       "cat": "bild",
       "prio": "hoch",
       "due": "Session 2"
