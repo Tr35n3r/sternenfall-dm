@@ -1,13 +1,23 @@
 {
   "version": 1,
-  "saved": 1786537281531,
+  "saved": 1786969345274,
   "tasks": [
+    {
+      "id": "msx7eqf72q3t",
+      "done": false,
+      "created": 1786969344067,
+      "title": "Initiative Karten erstellen",
+      "notes": "Karten für die Spieler und Gegner generieren",
+      "cat": "bild",
+      "prio": "mittel",
+      "due": "Ende Jahr"
+    },
     {
       "id": "msq18s9gepmf",
       "done": true,
       "created": 1786535725588,
       "title": "Termin-Finder Seite",
-      "notes": "Termin-Finder Seite bauen um besser einen Termin für die Sessions zu finden",
+      "notes": "Termin-Finder Seite bauen um besser einen Termin fÃ¼r die Sessions zu finden",
       "cat": "session",
       "prio": "hoch",
       "due": "asap"
@@ -16,8 +26,8 @@
       "id": "ms9cy3ss5va9",
       "done": true,
       "created": 1785527457724,
-      "title": "PersÃ¶nliche Quest Drazhar",
-      "notes": "PersÃ¶nliche Quest Drazhar",
+      "title": "PersÃÂ¶nliche Quest Drazhar",
+      "notes": "PersÃÂ¶nliche Quest Drazhar",
       "cat": "quest",
       "prio": "mittel",
       "due": "Session 3"
@@ -26,8 +36,8 @@
       "id": "ms9cwz2dvukz",
       "done": true,
       "created": 1785527404933,
-      "title": "PersÃ¶nliche Quest Nyktarion",
-      "notes": "PersÃ¶nliche Quest Nyktarion",
+      "title": "PersÃÂ¶nliche Quest Nyktarion",
+      "notes": "PersÃÂ¶nliche Quest Nyktarion",
       "cat": "quest",
       "prio": "mittel",
       "due": "Session 3"
@@ -36,8 +46,8 @@
       "id": "ms9cweqcqfs2",
       "done": false,
       "created": 1785527378580,
-      "title": "PersÃ¶nliche Quest Skall",
-      "notes": "PersÃ¶nliche Quest Skall",
+      "title": "PersÃÂ¶nliche Quest Skall",
+      "notes": "PersÃÂ¶nliche Quest Skall",
       "cat": "quest",
       "prio": "mittel",
       "due": "Session 3"
@@ -46,8 +56,8 @@
       "id": "ms9cvskugbbq",
       "done": true,
       "created": 1785527349870,
-      "title": "PersÃ¶nliche Quest Davian",
-      "notes": "PersÃ¶nliche Quest Davian",
+      "title": "PersÃÂ¶nliche Quest Davian",
+      "notes": "PersÃÂ¶nliche Quest Davian",
       "cat": "quest",
       "prio": "mittel",
       "due": "Bis Session 3"
@@ -77,7 +87,7 @@
       "done": true,
       "created": 1784554085322,
       "title": "Reisebild",
-      "notes": "Ein BIld generieren welches ich fÃÂÃÂÃÂÃÂ¼r Strassen, Wege Schiff (Reisen, brauchen kann)",
+      "notes": "Ein BIld generieren welches ich fÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¼r Strassen, Wege Schiff (Reisen, brauchen kann)",
       "cat": "bild",
       "prio": "niedrig",
       "due": "Ende Jahr"
@@ -86,8 +96,8 @@
       "id": "mrt9e8am7m1v",
       "done": true,
       "created": 1784554032766,
-      "title": "Gated IF Variable abklÃÂÃÂÃÂÃÂ¤ren",
-      "notes": "Wenn ein neuer Gated eintrag zugÃÂÃÂÃÂÃÂ¤nglich gemacht wird, ein anderer automatisch gaten (z.b. wenn aufbruch nach norden, dann ist Holzhein nicht mehr der richtige aktuelle Ort sondern die Strasse, Wald oÃÂÃÂÃÂÃÂ¤.)",
+      "title": "Gated IF Variable abklÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¤ren",
+      "notes": "Wenn ein neuer Gated eintrag zugÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¤nglich gemacht wird, ein anderer automatisch gaten (z.b. wenn aufbruch nach norden, dann ist Holzhein nicht mehr der richtige aktuelle Ort sondern die Strasse, Wald oÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¤.)",
       "cat": "session",
       "prio": "hoch",
       "due": "Session 2"
@@ -97,7 +107,7 @@
       "done": false,
       "created": 1784553715874,
       "title": "Netzwerk Nebelkralle",
-      "notes": "Mit Questreihe KÃÂÃÂÃÂÃÂ¶hler ein Neues Netzwerk fÃÂÃÂÃÂÃÂ¼r die Nebelkrallen mit Senna als Einstieg darin definieren (wenn sie nicht getÃÂÃÂÃÂÃÂ¶tet wurde)",
+      "notes": "Mit Questreihe KÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¶hler ein Neues Netzwerk fÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¼r die Nebelkrallen mit Senna als Einstieg darin definieren (wenn sie nicht getÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¶tet wurde)",
       "cat": "story",
       "prio": "mittel",
       "due": "Session 2"
@@ -107,7 +117,7 @@
       "done": false,
       "created": 1784532811449,
       "title": "Session 3 Intro-Szene schreiben",
-      "notes": "AnknÃÂÃÂÃÂÃÂ¼pfen an Waldrand-Cliffhanger. Finn-Auftritt vorbereiten.",
+      "notes": "AnknÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¼pfen an Waldrand-Cliffhanger. Finn-Auftritt vorbereiten.",
       "cat": "session",
       "prio": "niedrig",
       "due": "Vor Session 3"
@@ -116,8 +126,8 @@
       "id": "mrswrdtl77in",
       "done": true,
       "created": 1784532811449,
-      "title": "SÃÂÃÂÃÂÃÂ¤gemÃÂÃÂÃÂÃÂ¼hlen und Heu Bild",
-      "notes": "Bild fÃÂÃÂÃÂÃÂ¼r SÃÂÃÂÃÂÃÂ¤gemÃÂÃÂÃÂÃÂ¼hle und Heu generieren",
+      "title": "SÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¤gemÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¼hlen und Heu Bild",
+      "notes": "Bild fÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¼r SÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¤gemÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¼hle und Heu generieren",
       "cat": "bild",
       "prio": "hoch",
       "due": "Session 2"
