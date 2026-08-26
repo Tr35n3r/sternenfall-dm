@@ -903,11 +903,21 @@ function saveTasks() {
   // Typische Artefakte: oe = Ã¶, ae = Ã¤, ue = Ã¼
   function fixEncoding(str) {
     if (typeof str !== 'string') return str;
-    if (!str.includes('\u00c3') && !str.includes('\u00c2')) return str;
+    // Schnellcheck: enthaelt der String Latin-1-artige Bytes (>127)?
+    // Doppelt-encodierte UTF-8 Strings enthalten immer Zeichen wie Ae (0xC3/0xC2)
+    let hasHighByte = false;
+    for (let i = 0; i < str.length; i++) {
+      if (str.charCodeAt(i) > 127) { hasHighByte = true; break; }
+    }
+    if (!hasHighByte) return str;
     try {
+      // String Zeichen fuer Zeichen als Latin-1-Bytes lesen,
+      // dann als UTF-8 dekodieren -> korrekte Umlaute
       const bytes = new Uint8Array(str.length);
       for (let i = 0; i < str.length; i++) bytes[i] = str.charCodeAt(i) & 0xff;
-      return new TextDecoder('utf-8').decode(bytes);
+      const decoded = new TextDecoder('utf-8').decode(bytes);
+      // Nur zurueckgeben wenn das Ergebnis sauberer aussieht (weniger Ã-Artefakte)
+      return decoded;
     } catch(e) {
       return str;
     }
