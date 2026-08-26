@@ -520,6 +520,7 @@
       kann man immer noch eine lokale JSON-Sicherung machen.
     -->
     <button class="io-btn" onclick="exportTasks()" title="Lokales JSON-Backup herunterladen">⬇ Backup</button>
+    <button class="io-btn" id="fix-enc-btn" onclick="runEncodingFix()" title="Umlaute reparieren" style="color:var(--clr-quest);border-color:var(--clr-quest)">✓ Umlaute reparieren</button>
     <button class="io-btn" onclick="document.getElementById('import-file-input').click()" title="JSON einlesen">⬆ Import</button>
     <input type="file" id="import-file-input" accept=".json" onchange="importTasks(event)">
     <button id="logout-btn" onclick="doLogout()">Abmelden</button>
@@ -888,13 +889,39 @@ async function ghSave() {
 let tasks = [];
 
 function loadTasks() {
-  try { tasks = JSON.parse(localStorage.getItem(KEY_TASKS) || '[]'); }
+  try { tasks = JSON.parse(localStorage.getItem(KEY_TASKS) || '[]').map(fixTaskEncoding); }
   catch { tasks = []; }
 }
 
 function saveTasks() {
   localStorage.setItem(KEY_TASKS, JSON.stringify(tasks));
 }
+
+
+  // fixEncoding: Repariert doppelt-encodierte UTF-8 Strings.
+  // Tritt auf wenn UTF-8 Bytes faelschlicherweise als Latin-1 gespeichert wurden.
+  // Typische Artefakte: oe = Ã¶, ae = Ã¤, ue = Ã¼
+  function fixEncoding(str) {
+    if (typeof str !== 'string') return str;
+    if (!str.includes('\u00c3') && !str.includes('\u00c2')) return str;
+    try {
+      const bytes = new Uint8Array(str.length);
+      for (let i = 0; i < str.length; i++) bytes[i] = str.charCodeAt(i) & 0xff;
+      return new TextDecoder('utf-8').decode(bytes);
+    } catch(e) {
+      return str;
+    }
+  }
+
+  // fixTaskEncoding: Wendet fixEncoding auf alle String-Felder eines Tasks an.
+  function fixTaskEncoding(t) {
+    return {
+      ...t,
+      title: fixEncoding(t.title || ''),
+      notes: fixEncoding(t.notes || ''),
+      due:   fixEncoding(t.due   || ''),
+    };
+  }
 
 // ==============================================================
 // 5. RENDER
@@ -1068,7 +1095,7 @@ function importTasks(event) {
       imported.forEach(t=>{
         if (!t.id||!t.title) return;
         map.has(t.id) ? updated++ : added++;
-        map.set(t.id,t);
+        map.set(t.id, fixTaskEncoding(t));
       });
       tasks = Array.from(map.values());
       render(); scheduleSave();
@@ -1150,6 +1177,38 @@ document.getElementById('login-token').addEventListener('keydown', e=>{
   if (e.key==='Enter') doLoginStep2();
 });
 
+
+  // ==============================================================
+  // ENCODING-FIX (einmalig ausfuehren wenn Umlaute kaputt sind)
+  // Repariert alle gespeicherten Tasks und speichert sie neu auf GitHub.
+  // Nach erfolgreichem Ausfuehren kann der Button ignoriert werden.
+  // ==============================================================
+  async function runEncodingFix() {
+    const btn = document.getElementById('fix-enc-btn');
+    btn.textContent = 'Repariere...';
+    btn.disabled = true;
+
+    let fixedCount = 0;
+    tasks = tasks.map(t => {
+      const fixed = fixTaskEncoding(t);
+      if (fixed.title !== t.title || fixed.notes !== t.notes || fixed.due !== t.due) {
+        fixedCount++;
+      }
+      return fixed;
+    });
+
+    render();
+    await ghSave();
+
+    btn.textContent = fixedCount > 0
+      ? 'Erledigt: ' + fixedCount + ' Aufgaben repariert'
+      : 'Nichts zu reparieren';
+
+    setTimeout(() => {
+      btn.style.display = 'none';
+    }, 4000);
+  }
+
 // ==============================================================
 // 10. INIT
 // ==============================================================
@@ -1194,7 +1253,7 @@ async function initApp() {
   // Dann GitHub-Version laden und überschreiben
   const ghData = await ghLoad();
   if (ghData && ghData.tasks) {
-    tasks = ghData.tasks;
+    tasks = ghData.tasks.map(fixTaskEncoding);
     saveTasks(); // Cache aktualisieren
     render();
   } else if (!ghData && tasks.length > 0) {
