@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "saved": 1787726931529,
+  "saved": 1787820009608,
   "tasks": [
     {
       "id": "msx7eqf72q3t",
@@ -104,7 +104,7 @@
     },
     {
       "id": "mrt97fs2sb78",
-      "done": false,
+      "done": true,
       "created": 1784553715874,
       "title": "Netzwerk Nebelkralle",
       "notes": "Mit Questreihe Köhler ein neues Netzwerk für die Nebelkrallen mit Senna als Einstieg darin definieren (wenn sie nicht getötet wurde)",
